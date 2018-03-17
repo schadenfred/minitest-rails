@@ -6,47 +6,48 @@ describe <%= controller_class_name %>Controller do
   include Engine.routes.url_helpers
 
   <%- end -%>
-  let(:<%= singular_table_name %>) { <%= fixture_name %> :one }
+  Given(:<%= singular_table_name %>) { <%= fixture_name %> :one }
 
-  it "gets index" do
-    get <%= index_helper %>_url
-    value(response).must_be :success?
+  describe "#index" do
+
+    Given { get <%= index_helper %>_url }
+
+    Then { value(response).must_be :success? }
   end
 
-  it "gets new" do
-    get <%= new_helper %>
-    value(response).must_be :success?
+  describe "#new" do
+    Given { get <%= new_helper %> }
+    Then { value(response).must_be :success? }
   end
 
-  it "creates <%= singular_table_name %>" do
-    expect {
-      post <%= index_helper %>_url, params: { <%= "#{singular_table_name}: { #{attributes_hash} }" %> }
-    }.must_change "<%= class_name %>.count"
+  describe "#create" do
+    Given(:request) { post <%= index_helper %>_url, params: { <%= "#{singular_table_name}: { #{attributes_hash} }" %> } }
+    Then { expect { request }.must_change "<%= class_name %>.count" }
 
     must_redirect_to <%= singular_table_name %>_path(<%= class_name %>.last)
   end
 
-  it "shows <%= singular_table_name %>" do
-    get <%= show_helper %>
-    value(response).must_be :success?
+  describe "#show" do
+    Given { get <%= show_helper %> }
+    Then { value(response).must_be :success? }
   end
 
-  it "gets edit" do
-    get <%= edit_helper %>
-    value(response).must_be :success?
+  describe "#edit" do
+    Given { get <%= edit_helper %> }
+    Then { value(response).must_be :success? }
   end
 
-  it "updates <%= singular_table_name %>" do
-    patch <%= show_helper %>, params: { <%= "#{singular_table_name}: { #{attributes_hash} }" %> }
-    must_redirect_to <%= singular_table_name %>_path(<%= "#{singular_table_name}" %>)
+  describe "#update" do
+    Given { patch <%= show_helper %>, params: { <%= "#{singular_table_name}: { #{attributes_hash} }" %> } }
+    Then { must_redirect_to <%= singular_table_name %>_path(<%= "#{singular_table_name}" %>) }
   end
 
-  it "destroys <%= singular_table_name %>" do
-    expect {
+  describe "#destroy" do
+    Then { expect {
       delete <%= show_helper %>
-    }.must_change "<%= class_name %>.count", -1
+    }.must_change "<%= class_name %>.count", -1}
 
-    must_redirect_to <%= index_helper %>_path
+    And { must_redirect_to <%= index_helper %>_path }
   end
 end
 <% end -%>
