@@ -12,9 +12,9 @@ describe <%= class_name %>Controller do
   # end
 <% else -%>
 <% actions.each do |action| -%>
-  it "should get <%= action %>" do
-    get <%= url_helper_prefix %>_<%= action %>_url
-    value(response).must_be :success?
+  describe "#<%= action %>" do
+    Given { get <%= url_helper_prefix %>_<%= action %>_url }
+    Then { value(response).must_be :success? }
   end
 
 <% end -%>
