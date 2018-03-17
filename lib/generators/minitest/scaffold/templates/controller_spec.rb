@@ -6,6 +6,7 @@ describe <%= controller_class_name %>Controller do
   include Engine.routes.url_helpers
 
   <%- end -%>
+
   Given(:<%= singular_table_name %>) { <%= fixture_name %> :one }
 
   describe "#index" do
@@ -27,7 +28,6 @@ describe <%= controller_class_name %>Controller do
     Given(:request) { post <%= index_helper %>_url, params: { <%= "#{singular_table_name}: { #{attributes_hash} }" %> } }
 
     Then { expect { request }.must_change "<%= class_name %>.count" }
-
     And { must_redirect_to <%= singular_table_name %>_path(<%= class_name %>.last) }
   end
 
@@ -53,11 +53,9 @@ describe <%= controller_class_name %>Controller do
   end
 
   describe "#destroy" do
+    Given(:request) { delete <%= show_helper %> }
 
-    Then { expect {
-      delete <%= show_helper %>
-    }.must_change "<%= class_name %>.count", -1}
-
+    Then { expect { request }.must_change "<%= class_name %>.count", -1}
     And { must_redirect_to <%= index_helper %>_path }
   end
 end
