@@ -3,6 +3,8 @@ require "test_helper"
 <% module_namespacing do -%>
 describe <%= class_name %> do
 
+  subject { <%= class_name %> }
+
   describe "db" do
 
     specify "columns & types" do
@@ -25,9 +27,9 @@ describe <%= class_name %> do
     end
   end
 
-  subject { <%= class_name %> }
 
   let(:<%= file_name %>) { <%= class_name %>.new }
+  Given(:<%= file_name %>) { <%= class_name.classify.constantize.table_name %>.new }
 
   it "must be valid" do
     value(<%= file_name %>).must_be :valid?
